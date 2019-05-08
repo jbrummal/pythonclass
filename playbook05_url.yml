@@ -1,0 +1,31 @@
+---
+- name: Playbook for random game
+  hosts: planet-express
+  gather_facts: yes
+  vars:
+          DEST: "~/rand.txt"
+          URL: https://www.random.org/integers/?num=1&min=0&max=1&col=1&base=10&format=plain&rnd=new
+  tasks:
+          - name: reach out and get url
+            get_url:
+                    url: "{{ URL }}"
+                    dest: "{{ DEST }}"
+                    force: yes
+
+          - name: read a file and save the results
+            command: "cat {{ DEST }}"
+            register: readfile
+
+          - name: show the contents of the file
+            debug:
+                    var: readfile.stdout
+
+          - name: Tell them they won
+            when: readfile.stdout == "1"
+            debug:
+                    msg: "You won!"
+
+          - name: Tell them they lost
+            when: readfile.stdout == "0"
+            debug:
+                    msg: "You lost!"

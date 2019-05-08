@@ -1,0 +1,56 @@
+---
+- name: Playbook that copies a file
+  hosts: planet-express
+  gather_facts: yes
+  vars:
+          APP: figlet
+          STATE: present
+          ENGINES: chemical
+
+  tasks:
+          - name: Install "{{ APP }}" in Debian/Ubuntu
+            tags:
+                    - install
+            become: yes
+            when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
+            apt:
+                    name: "{{ APP }}"
+                    state: "{{ STATE }}"
+
+          - name: Install "{{ APP }}" in CentOS
+            tags:
+                    - install
+            become: yes
+            when: ansible_os_family == "RedHat"
+            yum:
+                    name: "{{ APP }}"
+                    state: "{{ STATE }}"
+
+          - name: Copy a readme file to each host
+            tags:
+                    - copy
+            become: yes
+            copy:
+                    content: "This is a test\n" 
+                    dest: "/home/{{ inventory_hostname }}/readme.txt"
+
+          - name: Issue a command to the host
+            tags:
+                    - copy
+                    - install
+            become: yes
+            command: "ls /home/{{ inventory_hostname }}"
+            register: homevarz
+
+          - name: Print the value
+            tags:
+                    - copy
+                    - install
+            debug:
+                    var: homevarz.stdout
+
+          - name: Print group variable
+            tags:
+                    - group
+            debug:
+                    msg: "{{ ENGINES }}"

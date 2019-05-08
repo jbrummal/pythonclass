@@ -1,0 +1,32 @@
+---
+- name: Playbook that targets host
+  hosts: planet-express
+  gather_facts: yes
+  vars:
+          APP: figlet
+          STATE: present
+
+  tasks:
+          - name: Install "{{ APP }}" in Debian/Ubuntu
+            become: yes
+            when: ansible_os_family == "Debian" or ansible_os_family == "Ubuntu"
+            apt:
+                    name: "{{ APP }}"
+                    state: "{{ STATE }}"
+
+          - name: Install "{{ APP }}" in CentOS
+            become: yes
+            when: ansible_os_family == "RedHat"
+            yum:
+                    name: "{{ APP }}"
+                    state: "{{ STATE }}"
+
+          - name: Issue a command to the host
+            become: yes
+            command: ls /home
+            register: homevarz
+
+          - name: Print the value
+            debug:
+                    #msg: "{{ homevarz.stdout }}"
+                    var: homevarz.stdout

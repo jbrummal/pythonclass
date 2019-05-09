@@ -1,0 +1,37 @@
+---
+- name: A few basic jinja filters
+  hosts: localhost
+  gather_facts: no
+  vars:
+          JARLIST: [1,1,1,1,1,5]
+          REPEATLIST: [1,2,2,2,4,4,4,4,9,9,9,9]
+          REPEAT2LIST: [1,2,3,4,5,6,7]
+          COMPLEXLIST: [6,7,8,9,[10,22,55,87]]
+
+  tasks:
+          - name: Example use of min() filter
+            debug:
+                    msg: "'{{ JARLIST | min }}'"
+
+          - name: Example use of flatten() filter
+            debug:
+                    msg: "'{{ COMPLEXLIST | flatten }}'"
+
+          - name: Example use of unique() filter
+            debug:
+                    msg: "'{{ REPEATLIST | unique }}'"
+
+          - name: Example use of diff() filter
+            debug:
+                    msg: "'{{ REPEATLIST | difference(REPEAT2LIST) }}'"
+
+          - name: Example use of diff() filter
+            debug:
+                    msg: "'{{ REPEAT2LIST | difference(REPEATLIST) }}'"
+
+          - name: Example use of sleeptime() filter
+            pause:
+                    seconds: "{{ sleeptime | default(10) }}"
+
+
+

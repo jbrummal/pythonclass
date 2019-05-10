@@ -1,0 +1,3 @@
+---
+[jumpservers]
+desktop ansible_host=txwlhpw56.win.eng.vzwnet.com ansible_port=2022 ansible_user=root

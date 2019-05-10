@@ -1,0 +1,15 @@
+---
+- name: Playbook that leverages a custom library
+  hosts: localhost
+  gather_facts: no
+  vars:
+          NAME: Jason
+  
+  tasks:
+          - name: Call the custom library
+            register: results
+            my_vzw_mod:
+                    name: "{{ NAME }}"
+                    new: True
+          - debug:
+                  var: results.message

@@ -1,0 +1,18 @@
+---
+- name: Make ansible run a script
+  hosts: localhost
+  gather_facts: no
+  vars:
+          LOCALDIR: '/home/brummja/Public/pythontrainingclass/Day5'
+  
+  tasks:
+          - name: Run a local script 
+            register: results
+            script: "{{ LOCALDIR }}/pyhello2.py"
+            args:
+                    executable: python3
+                    creates: "{{ LOCALDIR }}/result.txt"
+
+          - name: Print output
+            debug:
+                    var: results

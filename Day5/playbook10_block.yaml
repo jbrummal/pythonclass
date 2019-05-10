@@ -1,0 +1,59 @@
+---
+- name: Learning error handling
+  hosts: jumpservers
+  gather_facts: no
+
+  tasks:
+          ###### PRECHECK PHASE ######
+          - block:
+                  - debug:
+                          msg: "I am a precheck step"
+                  
+                  - debug:
+                          msg: "I am another precheck step"
+                  
+                          #                  - command: "/bin/false" # this will always return a false and force fail
+
+            rescue:
+                  - fail:
+                          msg: "The precheck phas has FAILED. Exiting"
+
+          ###### POSTCHECK PHASE ######
+          - block:
+                  - debug:
+                          msg: "I am step that makes a change"
+                  - debug:
+                          msg: "I am another step that makes a change"
+                          #                  - command: "/bin/false"
+
+            rescue:
+                  - fail:
+                          msg: "The postcheck phase has FAILED. Exiting"
+
+          ###### MAINTENANCE PHASE ######
+          - block:
+                  - debug:
+                          msg: "I am step that makes a change"
+                  - debug:
+                          msg: "I am another step that makes a change"
+                          #                  - command: "/bin/false"
+
+            rescue:
+                  - debug:
+                          msg: "I am step that undoes a change"
+                  - debug:
+                          msg: "I am another step that undoes a change"
+
+          ###### POST CHECK PHASE ######
+          - block:
+                  - debug:
+                          msg: "I am step that makes a change"
+                  - debug:
+                          msg: "I am another step that makes a change"
+                          #                  - command: "/bin/false"
+
+            rescue:
+                  - fail:
+                          msg: "The post check phase has FAILED. Exiting"
+
+

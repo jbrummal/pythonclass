@@ -1,0 +1,29 @@
+---
+- name : Ansible rest and tags
+  hosts: localhost
+  gather_facts: no
+  vars:
+          myrsakey: "{{ lookup('file', '/home/brummja/.ssh/id_rsa.pub') }}"
+          astros: "{{ lookup('url', 'http://api.open-notify.org/astros.json') }}"
+  tasks:
+          - name: Key prep 
+            tags:
+                    - keytime
+                    - vmprep
+            debug:
+                    msg: "Your RSA key is {{ myrsakey }}" 
+
+          - name: Show astros and cosmos on the ISS
+            tags:
+                    - jsonwork
+                    - astros
+            debug:
+                    msg: "Today on the ISS are: {{ astros.people }}"
+
+          - name: Clean up the ISS data
+            tags:
+                    - astros
+            debug:
+                    msg: "Currently in space: {{ item }}"
+            loop:
+                    "{{ astros.people | map(attribute='name') | list }}"

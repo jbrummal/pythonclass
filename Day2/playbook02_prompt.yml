@@ -1,0 +1,16 @@
+---
+- name: Prompting playbook
+  hosts: localhost
+  gather_facts: no
+  vars_prompt:
+          - name: "yourpasswdprompt" # Name the variable
+            prompt: "What is your password?" # What to prompt user with
+            private: yes # Make sure to not echo to screen
+            encrypt: "sha512_crypt" # If encrypting what version
+            confirm: yes
+            default: "qwerty"
+
+  tasks:
+         - name: Print the result of the command
+           debug:
+                   var: yourpasswdprompt
